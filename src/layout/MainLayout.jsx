@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import SideBarLayout from "./SideBarLayout";
+import SideBarLayout from "./SidebarLayout";
 import { Outlet } from "react-router-dom";
 import { Avatar, AvatarFallback, } from "@/components/ui/avatar";
 import { useMe } from "@/hooks/useAuthapi";
