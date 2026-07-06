@@ -27,7 +27,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
-import { useMe, useUpdateProfile } from "@/hooks/useAuthapi";
+import { useMe, useUpdateProfile, useUpdatePassword } from "@/hooks/useAuthapi";
 import { useGetFavoriteBlogs } from "@/hooks/useBlogapi";
 import { toast } from "sonner";
 import { BlogCard } from "@/components/BlogCard";
@@ -60,6 +60,8 @@ export default function ProfilePage() {
 
     const { mutateAsync: updateProfile, isLoading: isUpdatingProfile } =
         useUpdateProfile();
+    const { mutateAsync: updatePassword, isLoading: isUpdatingPassword } =
+        useUpdatePassword();
 
     const [editOpen, setEditOpen] = useState(false);
     const [firstName, setFirstName] = useState("");
@@ -138,7 +140,7 @@ export default function ProfilePage() {
         }
     };
 
-    const handleSavePassword = () => {
+    const handleSavePassword = async () => {
         if (!currentPw || !newPw || !confirmPw) {
             toast.error("Please fill in all fields");
             return;
@@ -151,12 +153,16 @@ export default function ProfilePage() {
             toast.error("Passwords do not match");
             return;
         }
-
-        toast.success("Password updated!");
-        setCurrentPw("");
-        setNewPw("");
-        setConfirmPw("");
-        setPwOpen(false);
+        try {
+            await updatePassword({ currentPassword: currentPw, newPassword: newPw, confirmPassword: confirmPw });
+            toast.success("Password updated!");
+            setCurrentPw("");
+            setNewPw("");
+            setConfirmPw("");
+            setPwOpen(false);
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to update password");
+        }
     };
 
     if (isLoadingUser) {
@@ -505,8 +511,9 @@ export default function ProfilePage() {
                         <Button
                             className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2 cursor-pointer "
                             onClick={handleSavePassword}
+                            disabled={isUpdatingPassword}
                         >
-                            <Save className="w-4 h-4" /> Update Password
+                            <Save className="w-4 h-4" /> {isUpdatingPassword ? "Updating..." : "Update Password"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

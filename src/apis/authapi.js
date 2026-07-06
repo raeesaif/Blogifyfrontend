@@ -17,4 +17,8 @@ export const authApi = {
         const response = await apiClient.patch("/auth/update-profile", data);
         return response.data;
     },
+    updatePassword: async (data) => {
+        const response = await apiClient.patch("/auth/update-password", data);
+        return response.data;
+    },
 };

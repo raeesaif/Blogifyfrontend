@@ -30,4 +30,11 @@ export const useUpdateProfile = () => {
         mutationKey: ["auth", "updateProfile"],
         mutationFn: (data) => authApi.updateProfile(data),
     });
+};
+
+export const useUpdatePassword = () => {
+    return useMutation({
+        mutationKey: ["auth", "updatePassword"],
+        mutationFn: (data) => authApi.updatePassword(data),
+    });
 }; 

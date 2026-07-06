@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    FileText, Activity as ActivityIcon, Trash2, Settings,
+    FileText, Activity as ActivityIcon, Trash2,
     Upload, UserPlus, Pencil, Heart,
     Eye,
 } from "lucide-react";
@@ -39,7 +39,7 @@ const iconMap = {
 
 // ── Main Component ─────────────────────────────────────────────────
 export default function AdminDashboard() {
-    const user = useAuthStore((s) => s.user);
+
     const navigate = useNavigate();
     const [deleteTarget, setDeleteTarget] = useState(null);
 
