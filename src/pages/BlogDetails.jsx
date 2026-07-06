@@ -137,7 +137,7 @@ export default function BlogDetails() {
 
             <article className="max-w-4xl mx-auto px-6 pb-16">
                 <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-                    {blog.category}
+                    {blog.category?.charAt(0).toUpperCase() + blog.category?.slice(1)}
                 </Badge>
 
                 <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground leading-tight mb-6">

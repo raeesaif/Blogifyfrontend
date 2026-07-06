@@ -1,12 +1,13 @@
 import apiClient from "@/lib/apiClient";
 
 export const blogApi = {
-    getAllBlogs: async ({ page = 1, limit = 10, category = "", sort = "" } = {}) => {
+    getAllBlogs: async ({ page = 1, limit = 10, category = "", sort = "", search = "" } = {}) => {
         const params = {};
         if (page) params.page = page;
         if (limit) params.limit = limit;
         if (category) params.category = category;
         if (sort) params.sort = sort;
+        if (search) params.search = search;
         const response = await apiClient.get("/blogs", { params });
         return response.data;
     },

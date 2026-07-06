@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
     FileText, Activity as ActivityIcon, Trash2, Settings,
     Upload, UserPlus, Pencil, Heart,
+    Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -20,20 +21,20 @@ import Loader from "@/components/Loader";
 // ── Static activity log ────────────────────────────────────────────
 const activityLog = [
     { id: 1, icon: "publish", action: "Blog Published", description: "\"The Future of AI\" was published by Sarah Chen.", timestamp: "2 min ago" },
-    { id: 2, icon: "user",    action: "New User Joined", description: "James Okafor signed up as a Reader.", timestamp: "15 min ago" },
-    { id: 3, icon: "edit",    action: "Blog Edited", description: "Mia Torres updated \"The Art of Slow Mornings\".", timestamp: "1 hr ago" },
-    { id: 4, icon: "delete",  action: "Blog Deleted", description: "Admin removed a spam post.", timestamp: "3 hr ago" },
+    { id: 2, icon: "user", action: "New User Joined", description: "James Okafor signed up as a Reader.", timestamp: "15 min ago" },
+    { id: 3, icon: "edit", action: "Blog Edited", description: "Mia Torres updated \"The Art of Slow Mornings\".", timestamp: "1 hr ago" },
+    { id: 4, icon: "delete", action: "Blog Deleted", description: "Admin removed a spam post.", timestamp: "3 hr ago" },
     { id: 5, icon: "favourite", action: "Blog Liked", description: "\"Hidden Gems of Southeast Asia\" received 10 new likes.", timestamp: "5 hr ago" },
     { id: 6, icon: "publish", action: "Blog Published", description: "\"Smart Money Habits\" went live.", timestamp: "Yesterday" },
-    { id: 7, icon: "user",    action: "New User Joined", description: "Priya Nair signed up as a Writer.", timestamp: "Yesterday" },
+    { id: 7, icon: "user", action: "New User Joined", description: "Priya Nair signed up as a Writer.", timestamp: "Yesterday" },
 ];
 
 const iconMap = {
-    publish:   <Upload  className="w-4 h-4 text-emerald-400" />,
-    delete:    <Trash2  className="w-4 h-4 text-red-400" />,
-    user:      <UserPlus className="w-4 h-4 text-indigo-400" />,
-    edit:      <Pencil  className="w-4 h-4 text-amber-400" />,
-    favourite: <Heart   className="w-4 h-4 text-pink-400" />,
+    publish: <Upload className="w-4 h-4 text-emerald-400" />,
+    delete: <Trash2 className="w-4 h-4 text-red-400" />,
+    user: <UserPlus className="w-4 h-4 text-indigo-400" />,
+    edit: <Pencil className="w-4 h-4 text-amber-400" />,
+    favourite: <Heart className="w-4 h-4 text-pink-400" />,
 };
 
 // ── Main Component ─────────────────────────────────────────────────
@@ -54,6 +55,10 @@ export default function AdminDashboard() {
         });
         setDeleteTarget(null);
     };
+
+    const handleViewBlog = (blogId) => {
+        navigate(`/blog/${blogId}`);
+    }
 
     return (
         <div className="space-y-6">
@@ -101,16 +106,20 @@ export default function AdminDashboard() {
                                         {blogs.map((b) => (
                                             <tr
                                                 key={b._id}
-                                                className="border-b border-border/50 hover:bg-accent/30 transition"
+                                                className="border-b border-border/50 hover:bg-accent/30 transition duration-200 cursor-pointer "
                                             >
                                                 <td className="px-6 py-4 text-foreground font-medium max-w-xs truncate">
                                                     {b.title}
                                                 </td>
                                                 <td className="px-6 py-4 text-muted-foreground">
                                                     {b.author?.firstname
-                                                        ? `${b.author.firstname} ${b.author.lastname ?? ""}`.trim()
+                                                        ? `${b.author.firstname.charAt(0).toUpperCase()}${b.author.firstname.slice(1)} ${b.author.lastname
+                                                            ? `${b.author.lastname.charAt(0).toUpperCase()}${b.author.lastname.slice(1)}`
+                                                            : ""
+                                                            }`.trim()
                                                         : b.author?.name ?? "—"}
                                                 </td>
+
                                                 <td className="px-6 py-4">
                                                     <Badge className="bg-primary/10 text-primary border-primary/20 capitalize">
                                                         {b.category}
@@ -125,6 +134,14 @@ export default function AdminDashboard() {
                                                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive hover:bg-destructive/20 transition text-xs font-medium cursor-pointer"
                                                     >
                                                         <Trash2 className="w-3.5 h-3.5" /> Delete
+                                                    </button>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <button
+                                                        onClick={() => handleViewBlog(b._id)}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition text-xs font-medium cursor-pointer"
+                                                    >
+                                                        <Eye className="w-3.5 h-3.5" /> View
                                                     </button>
                                                 </td>
                                             </tr>
@@ -149,7 +166,7 @@ export default function AdminDashboard() {
                                 {activityLog.map((a) => (
                                     <li
                                         key={a.id}
-                                        className="flex items-start gap-4 p-4 hover:bg-accent/20 rounded-xl transition"
+                                        className="flex items-start gap-4 p-4 hover:bg-accent/20 rounded-xl transition cursor-pointer "
                                     >
                                         <div className="w-10 h-10 rounded-xl bg-accent border border-border flex items-center justify-center shrink-0">
                                             {iconMap[a.icon]}

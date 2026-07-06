@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { blogApi } from "@/apis/blogApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -9,11 +8,10 @@ export const useCreateBlog = ()=>{
     })
 }
 
-export const useGetAllBlogs = ({ page = 1, limit = 10, category = "", sort = "" } = {}) => {
-    const params = useMemo(() => ({ page, limit, category, sort }), [page, limit, category, sort]);
+export const useGetAllBlogs = ({ page = 1, limit = 10, category = "", sort = "", search = "" } = {}) => {
     return useQuery({
-        queryKey: ["blogs", params],
-        queryFn: () => blogApi.getAllBlogs(params),
+        queryKey: ["blogs", page, limit, category, sort, search],
+        queryFn: () => blogApi.getAllBlogs({ page, limit, category, sort, search }),
         select: (data) => ({
             blogs: data.data || [],
             totalCount: data.count || data.total || 0,

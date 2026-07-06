@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Navbar } from "@/layout/Navbar";
 import { BlogCard } from "@/components/BlogCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useGetAllBlogs, useGetFavoriteBlogs } from "@/hooks/useBlogapi";
 import { useAuthStore } from "@/store/authstore";
 
@@ -203,7 +203,7 @@ export default function Home() {
                             <button
                                 key={topic.value}
                                 onClick={() => navigate(`/explore?category=${topic.value}`)}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium text-sm hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all duration-200"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium text-sm hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all duration-200 cursor-pointer"
                             >
                                 <span>{topic.emoji}</span> {topic.label}
                             </button>
@@ -229,7 +229,7 @@ export default function Home() {
                             </div>
                             <div className="flex flex-col gap-3 shrink-0">
                                 <Button
-                                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold px-8 py-3 h-auto gap-2 rounded-xl text-base"
+                                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold px-8 py-3 h-auto gap-2 rounded-xl text-base cursor-pointer "
                                     onClick={() => navigate("/signup")}
                                 >
                                     <PenLine className="w-4 h-4" /> Start Writing Free
@@ -262,7 +262,7 @@ export default function Home() {
                         />
                         <Button
                             type="submit"
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shrink-0"
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shrink-0  cursor-pointer "
                         >
                             Subscribe
                         </Button>
@@ -280,10 +280,10 @@ export default function Home() {
                         <span className="text-muted-foreground text-sm">— where stories live</span>
                     </div>
                     <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                        {["About", "Explore", "Write", "Privacy", "Terms"].map((link) => (
-                            <a key={link} href={`/${link.toLowerCase()}`} className="hover:text-primary transition-colors">
+                        {["About", "Explore",].map((link) => (
+                            <Link key={link} to={link === "Home" ? "/" : `/${link.toLowerCase()}`} className="hover:text-primary transition-colors">
                                 {link}
-                            </a>
+                            </Link>
                         ))}
                     </div>
                     <p className="text-xs text-muted-foreground">© 2024 Blogify. All rights reserved.</p>

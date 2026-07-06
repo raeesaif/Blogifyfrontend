@@ -3,13 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/layout/Navbar";
+import { useNavigate } from "react-router-dom";
 
-// ─── Mock helpers (replace with your real router) ─────────────────────────────
-const mockNavigate = (path) => {
-    console.log("Navigate to:", path);
-    // window.location.href = path;
-};
-// ─────────────────────────────────────────────────────────────────────────────
 
 const VALUES = [
     {
@@ -43,10 +38,12 @@ const TEAM = [
 const ROLES = [
     { role: "Reader", emoji: "📖", desc: "Discover and favourite stories from creators you love.", path: "/login" },
     { role: "Creator", emoji: "✍️", desc: "Publish your writing and build your audience.", path: "/signup" },
-    { role: "Admin", emoji: "⚙️", desc: "Manage the platform, users, and all published content.", path: "/login" },
+    // { role: "Admin", emoji: "⚙️", desc: "Manage the platform, users, and all published content.", path: "/login" },
 ];
 
 export default function AboutPage() {
+
+    const navigate = useNavigate()
     return (
         <div className="min-h-screen bg-background pt-24 pb-16">
             <Navbar />
@@ -79,12 +76,12 @@ export default function AboutPage() {
                             Whether you're publishing your first essay or your thousandth, Blogify gives you the
                             tools to write with confidence and reach an audience that genuinely cares.
                         </p>
-                        <p className="text-muted-foreground">
+                        {/* <p className="text-muted-foreground">
                             This is a demo experience — log in as <strong className="text-foreground">Admin</strong>,{" "}
                             <strong className="text-foreground">Creator</strong>, or{" "}
                             <strong className="text-foreground">Reader</strong> to explore each role and see the
                             platform from every perspective.
-                        </p>
+                        </p> */}
                     </CardContent>
                 </Card>
 
@@ -157,12 +154,12 @@ export default function AboutPage() {
                         <h2 className="text-2xl font-bold text-foreground tracking-tight">Explore every role</h2>
                         <p className="text-muted-foreground mt-1">Log in and experience Blogify from any perspective</p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div className="flex justify-center gap-5">
                         {ROLES.map((r) => (
                             <Card
                                 key={r.role}
                                 className="bg-card border-border shadow-sm hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer group"
-                                onClick={() => mockNavigate(r.path)}
+                                onClick={() => navigate("/login")}
                             >
                                 <CardContent className="p-6 flex flex-col items-center text-center gap-3">
                                     <span className="text-4xl">{r.emoji}</span>
@@ -170,8 +167,8 @@ export default function AboutPage() {
                                     <p className="text-sm text-muted-foreground leading-relaxed">{r.desc}</p>
                                     <Button
                                         size="sm"
-                                        className="bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5 mt-1 w-full"
-                                        onClick={(e) => { e.stopPropagation(); mockNavigate(r.path); }}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5 mt-1 w-full cursor-pointer"
+                                        onClick={(e) => { e.stopPropagation(); navigate("/login"); }}
                                     >
                                         Try as {r.role} <ArrowRight className="w-3.5 h-3.5" />
                                     </Button>
@@ -194,14 +191,13 @@ export default function AboutPage() {
                         <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
                             <Button
                                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold gap-2 px-7 py-3 h-auto rounded-xl"
-                                onClick={() => mockNavigate("/signup")}
+                                onClick={() => navigate("/signup")}
                             >
                                 <PenLine className="w-4 h-4" /> Start Writing Free
                             </Button>
                             <Button
-                                variant="outline"
-                                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold px-7 py-3 h-auto rounded-xl"
-                                onClick={() => mockNavigate("/explore")}
+                                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary/10 font-semibold px-7 py-3 h-auto rounded-xl cursor-pointer"
+                                onClick={() => navigate("/explore")}
                             >
                                 Browse Stories
                             </Button>

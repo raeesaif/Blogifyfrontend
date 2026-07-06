@@ -69,13 +69,12 @@ export function BlogCard({ blog, showAuthor = true, showExcerpt = true, favorite
                     <div className="absolute top-3 right-3">
                         <button
                             onClick={toggleLike}
-                            className="w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center transition-all hover:bg-destructive/10 hover:border-destructive/30"
+                            className="w-9 h-9 rounded-full bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center transition-all hover:bg-destructive/10 hover:border-destructive/30 cursor-pointer "
                             aria-label="Favorite"
                         >
                             <Heart
-                                className={`w-4 h-4 transition-colors ${
-                                    isFav ? "fill-red-500 text-red-500" : "text-muted-foreground"
-                                }`}
+                                className={`w-4 h-4 transition-colors ${isFav ? "fill-red-500 text-red-500" : "text-muted-foreground"
+                                    }`}
                             />
                         </button>
                     </div>
@@ -85,7 +84,7 @@ export function BlogCard({ blog, showAuthor = true, showExcerpt = true, favorite
                     <h3 className="font-bold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                         {blog.title}
                     </h3>
-                    
+
                     {showExcerpt && blog.excerpt && (
                         <p className="text-sm text-muted-foreground mt-2 line-clamp-2 flex-1">
                             {blog.excerpt}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { BlogCard } from "@/components/BlogCard";
 import { Pagination } from "@/components/pagination";
 import { useGetAllBlogs, useGetFavoriteBlogs } from "@/hooks/useBlogapi";
 import { useAuthStore } from "@/store/authstore";
+import Loader from "@/components/Loader";
 
 const CATEGORIES = [
     { label: "All", value: "" },
@@ -24,6 +25,7 @@ const SORT_OPTIONS = ["Newest", "Most Liked", "Shortest Read"];
 
 export default function ExplorePage() {
     const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
+    const [searchInput, setSearchInput] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
     const [page, setPage] = useState(1);
@@ -36,6 +38,7 @@ export default function ExplorePage() {
         limit,
         category: activeCategory.value,
         sort: sortMap[sortBy],
+        search: searchQuery,
     });
 
     const user = useAuthStore((state) => state.user);
@@ -56,10 +59,15 @@ export default function ExplorePage() {
         setPage(1);
     };
 
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-        setPage(1);
-    };
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearchQuery(searchInput);
+            setPage(1);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
+    const handleSearchChange = (e) => setSearchInput(e.target.value);
 
     const handleSortChange = (opt) => {
         setSortBy(opt);
@@ -84,7 +92,7 @@ export default function ExplorePage() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                             placeholder="Search stories..."
-                            value={searchQuery}
+                            value={searchInput}
                             onChange={handleSearchChange}
                             className="pl-9 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-ring"
                         />
@@ -119,7 +127,7 @@ export default function ExplorePage() {
                             key={c.value}
                             onClick={() => handleCategoryChange(c)}
                             className={[
-                                "px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200",
+                                "px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ",
                                 activeCategory.value === c.value
                                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
                                     : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground",
@@ -140,11 +148,9 @@ export default function ExplorePage() {
 
                 {/* ── Blog grid / empty state ── */}
                 {isLoading ? (
-                    <Card className="bg-card border-border">
-                        <CardContent className="p-16 text-center flex flex-col items-center gap-4">
-                            <p className="text-muted-foreground">Loading stories...</p>
-                        </CardContent>
-                    </Card>
+                    <>
+                        <Loader />
+                    </>
                 ) : blogs.length === 0 ? (
                     <Card className="bg-card border-border">
                         <CardContent className="p-16 text-center flex flex-col items-center gap-4">

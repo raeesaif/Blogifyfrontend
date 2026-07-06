@@ -373,13 +373,13 @@ export default function ProfilePage() {
                     <DialogFooter className="gap-2">
                         <Button
                             variant="outline"
-                            className="border-border text-foreground hover:bg-accent"
+                            className="border-border text-foreground hover:bg-accent cursor-pointer "
                             onClick={() => setEditOpen(false)}
                         >
                             Cancel
                         </Button>
                         <Button
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2"
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2 cursor-pointer "
                             onClick={handleSaveProfile}
                             disabled={isUpdatingProfile}
                         >
@@ -418,7 +418,7 @@ export default function ProfilePage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowCurrent((v) => !v)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer "
                                 >
                                     {showCurrent ? (
                                         <EyeOff className="w-4 h-4" />
@@ -477,7 +477,7 @@ export default function ProfilePage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirm((v) => !v)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer "
                                 >
                                     {showConfirm ? (
                                         <EyeOff className="w-4 h-4" />
@@ -492,7 +492,7 @@ export default function ProfilePage() {
                     <DialogFooter className="gap-2">
                         <Button
                             variant="outline"
-                            className="border-border text-foreground hover:bg-accent"
+                            className="border-border text-foreground hover:bg-accent cursor-pointer "
                             onClick={() => {
                                 setPwOpen(false);
                                 setCurrentPw("");
@@ -503,7 +503,7 @@ export default function ProfilePage() {
                             Cancel
                         </Button>
                         <Button
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2"
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2 cursor-pointer "
                             onClick={handleSavePassword}
                         >
                             <Save className="w-4 h-4" /> Update Password
