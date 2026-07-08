@@ -8,6 +8,7 @@ import { BlogCard } from "@/components/BlogCard";
 import { useNavigate, Link } from "react-router-dom";
 import { useGetAllBlogs, useGetFavoriteBlogs } from "@/hooks/useBlogapi";
 import { useAuthStore } from "@/store/authstore";
+import Loader from "@/components/Loader";
 
 
 const mockToast = { success: (msg) => alert("✅ " + msg) };
@@ -101,13 +102,15 @@ export default function Home() {
                         >
                             Start Reading <ArrowRight className="w-4 h-4" />
                         </Button>
-                        <Button
-                            variant="outline"
-                            className="border-border text-foreground hover:bg-accent font-semibold px-7 py-3 h-auto text-base rounded-xl cursor-pointer "
-                            onClick={() => navigate("/signup")}
-                        >
-                            Join Blogify
-                        </Button>
+                        {!user && (
+                            <Button
+                                variant="outline"
+                                className="border-border text-foreground hover:bg-accent font-semibold px-7 py-3 h-auto text-base rounded-xl cursor-pointer "
+                                onClick={() => navigate("/signup")}
+                            >
+                                Join Blogify
+                            </Button>
+                        )}
                     </div>
 
                     <p className="mt-6 text-sm text-muted-foreground">
@@ -167,7 +170,9 @@ export default function Home() {
                     </div>
 
                     {isLoading ? (
-                        <div className="text-center py-20 text-muted-foreground">Loading stories...</div>
+                        <>
+                            <Loader />
+                        </>
                     ) : blogs.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {blogs.map((blog) => (
@@ -228,15 +233,21 @@ export default function Home() {
                                 </p>
                             </div>
                             <div className="flex flex-col gap-3 shrink-0">
-                                <Button
-                                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold px-8 py-3 h-auto gap-2 rounded-xl text-base cursor-pointer "
-                                    onClick={() => navigate("/signup")}
-                                >
-                                    <PenLine className="w-4 h-4" /> Start Writing Free
-                                </Button>
-                                <p className="text-center text-xs text-primary-foreground/60">
-                                    No credit card required
-                                </p>
+                                {!user && (
+                                    <>
+                                        <Button
+                                            className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold px-8 py-3 h-auto gap-2 rounded-xl text-base cursor-pointer "
+                                            onClick={() => navigate("/signup")}
+                                        >
+                                            <PenLine className="w-4 h-4" /> Start Writing Free
+                                        </Button>
+
+                                        <p className="text-center text-xs text-primary-foreground/60">
+                                            No credit card required
+                                        </p>
+                                    </>
+                                )}
+
                             </div>
                         </CardContent>
                     </Card>

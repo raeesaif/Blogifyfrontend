@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useGetAllBlogs, useGetFavoriteBlogs } from "@/hooks/useBlogapi";
 import { useAuthStore } from "@/store/authstore";
 import { BlogCard } from "@/components/BlogCard";
+import Loader from "@/components/Loader";
 
 export default function ReaderDashboard() {
     const navigate = useNavigate();
@@ -35,11 +36,9 @@ export default function ReaderDashboard() {
                 </p>
 
                 {isLoading ? (
-                    <Card className="bg-card border-border">
-                        <CardContent className="p-12 text-center text-muted-foreground">
-                            Loading blogs...
-                        </CardContent>
-                    </Card>
+                    <>
+                        <Loader />
+                    </>
                 ) : publishedBlogs.length === 0 ? (
                     <Card className="bg-card border-border">
                         <CardContent className="p-12 text-center">

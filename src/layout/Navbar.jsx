@@ -110,7 +110,7 @@ export function Navbar() {
                             <DropdownMenuTrigger asChild>
                                 <button className="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-accent transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                     <Avatar className="h-8 w-8">
-                                        <AvatarImage src={user.avatar} alt={user.name} />
+                                        <AvatarImage src={user.profileImage || user.avatar} alt={user.firstname} />
                                         <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
                                             {getInitials(user.firstname)}
                                         </AvatarFallback>

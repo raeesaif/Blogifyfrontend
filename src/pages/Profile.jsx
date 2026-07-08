@@ -29,8 +29,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useMe, useUpdateProfile, useUpdatePassword } from "@/hooks/useAuthapi";
 import { useGetFavoriteBlogs } from "@/hooks/useBlogapi";
+import { useAuthStore } from "@/store/authstore";
 import { toast } from "sonner";
 import { BlogCard } from "@/components/BlogCard";
+import Loader from "@/components/Loader";
 
 function getInitials(firstname = "", lastname = "") {
     const a = firstname?.[0] ?? "";
@@ -41,6 +43,7 @@ function getInitials(firstname = "", lastname = "") {
 export default function ProfilePage() {
     const navigate = useNavigate();
     const hasRedirected = useRef(false);
+    const { setAuth, accessToken, refreshToken } = useAuthStore();
 
     const {
         data: meResponse,
@@ -55,7 +58,7 @@ export default function ProfilePage() {
 
     const { data: favoriteData, isLoading: isLoadingFavorites } = useGetFavoriteBlogs(userId);
     const rawItems = favoriteData?.data || [];
-    const favoriteBlogs = rawItems.map((item) => item.blogId || item).filter(Boolean);
+    const favoriteBlogs = rawItems?.map((item) => item?.blogId || item)?.filter(Boolean);
     const favoriteIds = new Set(favoriteBlogs.map((b) => b._id || b.id));
 
     const { mutateAsync: updateProfile, isLoading: isUpdatingProfile } =
@@ -91,7 +94,7 @@ export default function ProfilePage() {
     const openEdit = () => {
         setFirstName(user?.firstname ?? "");
         setLastName(user?.lastname ?? "");
-        setAvatarPreview(user?.avatar ?? "");
+        setAvatarPreview(user?.profileImage || user?.avatar || "");
         setAvatarFile(null);
         setEditOpen(true);
     };
@@ -118,18 +121,18 @@ export default function ProfilePage() {
             return;
         }
 
-        const payload = {
-            firstname: firstName.trim(),
-            lastname: lastName.trim(),
-        };
-
-        if (avatarPreview) {
-            payload.avatar = avatarPreview;
+        const formData = new FormData();
+        formData.append("firstname", firstName.trim());
+        formData.append("lastname", lastName.trim());
+        if (avatarFile) {
+            formData.append("profileImage", avatarFile);
         }
 
         try {
-            await updateProfile(payload);
+            const res = await updateProfile(formData);
+            const updatedUser = res?.data || res;
             await refetch();
+            setAuth({ user: updatedUser, accessToken, refreshToken });
             toast.success("Profile updated!");
             setEditOpen(false);
         } catch (error) {
@@ -167,12 +170,9 @@ export default function ProfilePage() {
 
     if (isLoadingUser) {
         return (
-            <div className="min-h-screen bg-background pt-24 pb-16 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                    <p className="text-sm">Loading your profile...</p>
-                </div>
-            </div>
+            <>
+                <Loader size={50} />
+            </>
         );
     }
 
@@ -187,7 +187,7 @@ export default function ProfilePage() {
                 <Card className="bg-card border-border shadow-md">
                     <CardContent className="p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
                         <Avatar className="h-24 w-24 shrink-0 ring-4 ring-primary/20">
-                            <AvatarImage src={user.avatar} alt={fullName} />
+                            <AvatarImage src={user.profileImage || user.avatar} alt={fullName} />
                             <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
                                 {getInitials(user.firstname, user.lastname)}
                             </AvatarFallback>
@@ -252,11 +252,9 @@ export default function ProfilePage() {
                     </h2>
 
                     {isLoadingFavorites ? (
-                        <Card className="bg-card border-border shadow-sm">
-                            <CardContent className="p-12 text-center text-muted-foreground">
-                                Loading favourites...
-                            </CardContent>
-                        </Card>
+                        <>
+                            <Loader fullScreen={false} size={20} />
+                        </>
                     ) : favoriteBlogs.length === 0 ? (
                         <Card className="bg-card border-border shadow-sm">
                             <CardContent className="p-12 text-center flex flex-col items-center gap-4">

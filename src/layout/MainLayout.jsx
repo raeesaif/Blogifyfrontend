@@ -1,7 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SideBarLayout from "./SidebarLayout";
 import { Outlet } from "react-router-dom";
-import { Avatar, AvatarFallback, } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMe } from "@/hooks/useAuthapi";
 
 
@@ -28,6 +28,7 @@ export function MainLayout() {
                             <div className="flex items-center gap-2 rounded-lg bg-orange/50 px-3 py-1.5">
                                 <div >
                                     <Avatar>
+                                        <AvatarImage src={data?.profileImage || data?.avatar} alt={fullname} />
                                         <AvatarFallback className="bg-stone-500 text-white">{data?.firstname?.[0]?.toUpperCase()}{data?.lastname?.[0]?.toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
