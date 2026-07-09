@@ -60,4 +60,12 @@ export const blogApi = {
         const response = await apiClient.get(`/get-likes/${blogId}`);
         return response.data;
     },
+    getActivity: async ({ page = 1, limit = 10 } = {}) => {
+        const response = await apiClient.get("/activities", { params: { page, limit } });
+        return response.data;
+    },
+    postActivity: async (data) => {
+        const response = await apiClient.post("/activity", data);
+        return response.data;
+    },
 };

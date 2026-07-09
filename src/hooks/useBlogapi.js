@@ -135,3 +135,20 @@ export const useToggleLike = (blogId) => {
         },
     });
 };
+
+export const useGetActivity = ({ page = 1, limit = 10 } = {}) => {
+    return useQuery({
+        queryKey: ["activity", page, limit],
+        queryFn: () => blogApi.getActivity({ page, limit }),
+    });
+};
+
+export const usePostActivity = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data) => blogApi.postActivity(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["activity"]);
+        },
+    });
+};

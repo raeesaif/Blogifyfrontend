@@ -9,6 +9,7 @@ import { Navbar } from "@/layout/Navbar";
 import { useGetSingleBlog, useGetAllBlogs, useGetFavoriteBlogs, useToggleLike } from "@/hooks/useBlogapi";
 import { useAuthStore } from "@/store/authstore";
 import { BlogCard } from "@/components/BlogCard";
+import Loader from "@/components/Loader";
 
 export default function BlogDetails() {
     const { id } = useParams();
@@ -69,15 +70,9 @@ export default function BlogDetails() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background">
-                <Navbar />
-                <div className="max-w-4xl mx-auto px-6 pt-32 pb-16">
-                    <div className="flex flex-col items-center justify-center gap-4 py-20">
-                        <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                        <p className="text-muted-foreground">Loading blog...</p>
-                    </div>
-                </div>
-            </div>
+            <>
+                <Loader size={50} />
+            </>
         );
     }
 

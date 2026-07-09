@@ -14,20 +14,11 @@ import {
     AlertDialogContent, AlertDialogDescription,
     AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAuthStore } from "@/store/authstore";
-import { useGetAllBlogs, useDeleteBlog } from "@/hooks/useBlogapi";
+import { useGetAllBlogs, useDeleteBlog, useGetActivity } from "@/hooks/useBlogapi";
 import Loader from "@/components/Loader";
+import { Pagination } from "@/components/pagination";
 
-// ── Static activity log ────────────────────────────────────────────
-const activityLog = [
-    { id: 1, icon: "publish", action: "Blog Published", description: "\"The Future of AI\" was published by Sarah Chen.", timestamp: "2 min ago" },
-    { id: 2, icon: "user", action: "New User Joined", description: "James Okafor signed up as a Reader.", timestamp: "15 min ago" },
-    { id: 3, icon: "edit", action: "Blog Edited", description: "Mia Torres updated \"The Art of Slow Mornings\".", timestamp: "1 hr ago" },
-    { id: 4, icon: "delete", action: "Blog Deleted", description: "Admin removed a spam post.", timestamp: "3 hr ago" },
-    { id: 5, icon: "favourite", action: "Blog Liked", description: "\"Hidden Gems of Southeast Asia\" received 10 new likes.", timestamp: "5 hr ago" },
-    { id: 6, icon: "publish", action: "Blog Published", description: "\"Smart Money Habits\" went live.", timestamp: "Yesterday" },
-    { id: 7, icon: "user", action: "New User Joined", description: "Priya Nair signed up as a Writer.", timestamp: "Yesterday" },
-];
+// ── Static activity log removed ──
 
 const iconMap = {
     publish: <Upload className="w-4 h-4 text-emerald-400" />,
@@ -42,9 +33,19 @@ export default function AdminDashboard() {
 
     const navigate = useNavigate();
     const [deleteTarget, setDeleteTarget] = useState(null);
+    const [blogsPage, setBlogsPage] = useState(1);
+    const [activityPage, setActivityPage] = useState(1);
+    const limit = 10;
 
-    const { data, isLoading } = useGetAllBlogs({ page: 1, limit: 100 });
+    const { data, isLoading } = useGetAllBlogs({ page: blogsPage, limit });
     const blogs = data?.blogs || [];
+    const blogsTotalCount = data?.totalCount || 0;
+    const blogsTotalPages = data?.totalPages || 1;
+
+    const { data: activityData, isLoading: isLoadingActivity } = useGetActivity({ page: activityPage, limit });
+    const activityLog = activityData?.data || activityData?.activities || [];
+    const activityTotalCount = activityData?.total || 0;
+    const activityTotalPages = activityData?.totalpages || 1;
 
     const deleteMutation = useDeleteBlog();
 
@@ -151,36 +152,62 @@ export default function AdminDashboard() {
                             </div>
                         )}
                     </Card>
+                    <Pagination
+                        currentPage={blogsPage}
+                        hasNext={blogsPage < blogsTotalPages}
+                        hasPrevious={blogsPage > 1}
+                        totalCount={blogsTotalCount}
+                        currentCount={blogs.length}
+                        pageSize={limit}
+                        onPageChange={setBlogsPage}
+                        isLoading={isLoading}
+                        className="mt-2"
+                    />
                 </TabsContent>
-
-                {/* ── Activity Log Tab ── */}
                 <TabsContent value="activity" className="mt-4">
                     <Card className="bg-card border-border">
-                        {activityLog.length === 0 ? (
+                        {isLoadingActivity ? (
+                            <CardContent className="flex justify-center py-16">
+                                <Loader />
+                            </CardContent>
+                        ) : activityLog.length === 0 ? (
                             <CardContent className="p-12 text-center text-muted-foreground">
                                 <ActivityIcon className="w-8 h-8 mx-auto mb-3 opacity-50" />
                                 No activity yet
                             </CardContent>
                         ) : (
                             <ul className="divide-y divide-border">
-                                {activityLog.map((a) => (
+                                {activityLog.map((a, i) => (
                                     <li
-                                        key={a.id}
+                                        key={a._id || i}
                                         className="flex items-start gap-4 p-4 hover:bg-accent/20 rounded-xl transition cursor-pointer "
                                     >
                                         <div className="w-10 h-10 rounded-xl bg-accent border border-border flex items-center justify-center shrink-0">
-                                            {iconMap[a.icon]}
+                                            {iconMap[a.icons] || iconMap["user"]}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-foreground font-medium">{a.action}</p>
                                             <p className="text-sm text-muted-foreground mt-0.5">{a.description}</p>
                                         </div>
-                                        <span className="text-xs text-muted-foreground shrink-0">{a.timestamp}</span>
+                                        <span className="text-xs text-muted-foreground shrink-0">
+                                            {a.createdAt ? new Date(a.createdAt).toLocaleString() : ""}
+                                        </span>
                                     </li>
                                 ))}
                             </ul>
                         )}
                     </Card>
+                    <Pagination
+                        currentPage={activityPage}
+                        hasNext={activityPage < activityTotalPages}
+                        hasPrevious={activityPage > 1}
+                        totalCount={activityTotalCount}
+                        currentCount={activityLog.length}
+                        pageSize={limit}
+                        onPageChange={setActivityPage}
+                        isLoading={isLoadingActivity}
+                        className="mt-2"
+                    />
                 </TabsContent>
             </Tabs>
 
