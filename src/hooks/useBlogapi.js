@@ -4,8 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useCreateBlog = ()=>{
+    const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data) => blogApi.createBlog(data)
+        mutationFn: (data) => blogApi.createBlog(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["my-blogs"]);
+        },
     })
 }
 
