@@ -58,7 +58,7 @@ export default function ProfilePage() {
 
     const { data: favoriteData, isLoading: isLoadingFavorites } = useGetFavoriteBlogs(userId);
     const rawItems = favoriteData?.data || [];
-    const favoriteBlogs = rawItems?.map((item) => item?.blogId || item)?.filter(Boolean);
+    const favoriteBlogs = rawItems.filter(Boolean).map((item) => item?.blogId || item).filter(Boolean);
     const favoriteIds = new Set(favoriteBlogs.map((b) => b._id || b.id));
 
     const { mutateAsync: updateProfile, isLoading: isUpdatingProfile } =

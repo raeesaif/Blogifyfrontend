@@ -29,7 +29,7 @@ export default function BlogDetails() {
     const userId = user?._id || user?.id;
     const { data: favoriteData } = useGetFavoriteBlogs(userId);
     const favRawItems = favoriteData?.data || [];
-    const favBlogs = favRawItems.map((item) => item.blogId || item).filter(Boolean);
+    const favBlogs = favRawItems.filter(Boolean).map((item) => item.blogId || item).filter(Boolean);
     const favoriteIds = new Set(favBlogs.map((b) => b._id || b.id));
 
     const relatedBlogs = allBlogs.filter(

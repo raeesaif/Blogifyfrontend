@@ -54,7 +54,7 @@ export default function Home() {
 
     const { data: favoriteData } = useGetFavoriteBlogs(userId);
     const rawItems = favoriteData?.data || [];
-    const favBlogs = rawItems.map((item) => item.blogId || item).filter(Boolean);
+    const favBlogs = rawItems.filter(Boolean).map((item) => item.blogId || item).filter(Boolean);
     const favoriteIds = new Set(favBlogs.map((b) => b._id || b.id));
 
     const blogs = blogsData?.blogs || [];
